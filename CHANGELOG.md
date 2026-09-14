@@ -7,6 +7,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.8](https://github.com/oxc-project/oxc-zed/compare/v0.4.7...v0.4.8) - 2026-09-14
+
+### Other
+
+- *(deps)* update rust crate log to v0.4.34 ([#248](https://github.com/oxc-project/oxc-zed/pull/248))
+- reduce Rust dev debug info ([#245](https://github.com/oxc-project/oxc-zed/pull/245))
+- *(oxc-zed)* exclude extraneous files from published package ([#236](https://github.com/oxc-project/oxc-zed/pull/236))
+- *(deps)* update semgrep/semgrep docker tag to v1.171.0 ([#237](https://github.com/oxc-project/oxc-zed/pull/237))
+- *(semgrep)* add scan workflow ([#233](https://github.com/oxc-project/oxc-zed/pull/233))
+- *(deps)* update oxc apps ([#232](https://github.com/oxc-project/oxc-zed/pull/232))
+- *(deps)* update dependency rust to v1.97.1 ([#231](https://github.com/oxc-project/oxc-zed/pull/231))
+- update sponsor section
+- *(deps)* update oxc apps ([#228](https://github.com/oxc-project/oxc-zed/pull/228))
+- *(deps)* update dependency rust to v1.97.0 ([#227](https://github.com/oxc-project/oxc-zed/pull/227))
+- *(deps)* update oxc apps ([#226](https://github.com/oxc-project/oxc-zed/pull/226))
+- *(deps)* update rust to v1.96.1 ([#225](https://github.com/oxc-project/oxc-zed/pull/225))
+- standardize rustfmt config
+- *(deps)* update crate-ci/typos action to v1.48.0 ([#224](https://github.com/oxc-project/oxc-zed/pull/224))
+- normalize README sponsor section
+- configure clippy exported api lint ([#221](https://github.com/oxc-project/oxc-zed/pull/221))
+- *(deps)* update pnpm to v11.9.0 ([#220](https://github.com/oxc-project/oxc-zed/pull/220))
+- add crates environment to release workflow
+- *(deps)* update oxc apps ([#217](https://github.com/oxc-project/oxc-zed/pull/217))
+- *(deps)* update oxc-project/security-action action to v1.0.8 ([#216](https://github.com/oxc-project/oxc-zed/pull/216))
+- *(deps)* update oxc apps ([#215](https://github.com/oxc-project/oxc-zed/pull/215))
+- *(deps)* update rust crates to v0.4.33 ([#214](https://github.com/oxc-project/oxc-zed/pull/214))
+- *(deps)* update oxc apps ([#211](https://github.com/oxc-project/oxc-zed/pull/211))
+- *(deps)* update oxc apps ([#209](https://github.com/oxc-project/oxc-zed/pull/209))
+- *(deps)* update rust crates to v0.4.32 ([#208](https://github.com/oxc-project/oxc-zed/pull/208))
+- *(deps)* update typos to v1.47.2 ([#207](https://github.com/oxc-project/oxc-zed/pull/207))
+- *(deps)* update typos to v1.47.1 ([#206](https://github.com/oxc-project/oxc-zed/pull/206))
+- *(deps)* update oxc apps ([#204](https://github.com/oxc-project/oxc-zed/pull/204))
+- *(deps)* update crate-ci/typos action to v1.47.0 ([#203](https://github.com/oxc-project/oxc-zed/pull/203))
+- *(deps)* update pnpm to v11.4.0 ([#202](https://github.com/oxc-project/oxc-zed/pull/202))
+- *(deps)* update rust crate log to v0.4.30 ([#201](https://github.com/oxc-project/oxc-zed/pull/201))
+- *(deps)* update github actions ([#200](https://github.com/oxc-project/oxc-zed/pull/200))
+- *(deps)* update dependency rust to v1.96.0 ([#198](https://github.com/oxc-project/oxc-zed/pull/198))
+- *(deps)* update crate-ci/typos action to v1.46.3 ([#196](https://github.com/oxc-project/oxc-zed/pull/196))
+- *(deps)* update oxc apps ([#195](https://github.com/oxc-project/oxc-zed/pull/195))
+- *(deps)* update crate-ci/typos action to v1.46.2 ([#194](https://github.com/oxc-project/oxc-zed/pull/194))
+- *(deps)* update oxc apps ([#192](https://github.com/oxc-project/oxc-zed/pull/192))
+
 ## [0.4.7](https://github.com/oxc-project/oxc-zed/compare/v0.4.6...v0.4.7) - 2026-05-17
 
 ### Added

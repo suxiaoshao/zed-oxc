@@ -4,7 +4,7 @@ id = "oxc"
 name = "Oxc"
 repository = "https://github.com/oxc-project/oxc-zed"
 schema_version = 1
-version = "0.4.7"
+version = "0.4.8"
 
 [language_servers.oxlint]
 code_actions_kind = ["quickfix", "source.fixAll.oxc"]
