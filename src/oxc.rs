@@ -27,30 +27,6 @@ impl OxcExtension {
     fn is_oxlint_language_server(&self, language_server_id: &LanguageServerId) -> bool {
         language_server_id.as_ref() == OXLINT_SERVER_ID
     }
-
-    fn update_oxfmt_language_server_if_needed(
-        &self,
-        language_server_id: &LanguageServerId,
-        worktree: &Worktree,
-    ) -> Result<()> {
-        let zed_oxfmt_lsp = self.oxfmt_lsp.read().unwrap();
-        if !zed_oxfmt_lsp.exe_exists(worktree)? {
-            zed_oxfmt_lsp.update_extension_language_server_if_outdated(language_server_id)?;
-        }
-        Ok(())
-    }
-
-    fn update_oxlint_language_server_if_needed(
-        &self,
-        language_server_id: &LanguageServerId,
-        worktree: &Worktree,
-    ) -> Result<()> {
-        let zed_oxlint_lsp = self.oxlint_lsp.read().unwrap();
-        if !zed_oxlint_lsp.exe_exists(worktree)? {
-            zed_oxlint_lsp.update_extension_language_server_if_outdated(language_server_id)?;
-        }
-        Ok(())
-    }
 }
 
 impl Extension for OxcExtension {
@@ -72,8 +48,6 @@ impl Extension for OxcExtension {
         worktree: &Worktree,
     ) -> Result<Command> {
         if self.is_oxfmt_language_server(language_server_id) {
-            self.update_oxfmt_language_server_if_needed(language_server_id, worktree)?;
-
             return self
                 .oxfmt_lsp
                 .read()
@@ -82,8 +56,6 @@ impl Extension for OxcExtension {
         }
 
         if self.is_oxlint_language_server(language_server_id) {
-            self.update_oxlint_language_server_if_needed(language_server_id, worktree)?;
-
             return self
                 .oxlint_lsp
                 .read()

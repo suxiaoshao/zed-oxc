@@ -1,9 +1,9 @@
-use crate::lsp::ZedLspSupport;
+use crate::lsp::{ZedLspSupport, apply_env_overrides};
 use log::debug;
 use std::path::{Path, PathBuf};
 use zed_extension_api::serde_json::Value;
 use zed_extension_api::settings::LspSettings;
-use zed_extension_api::{Command, EnvVars, LanguageServerId, Result, Worktree, node_binary_path};
+use zed_extension_api::{Command, EnvVars, LanguageServerId, Result, Worktree};
 
 pub struct ZedOxlintLsp {}
 
@@ -26,12 +26,6 @@ impl ZedLspSupport for ZedOxlintLsp {
         let settings = LspSettings::for_worktree(language_server_id.as_ref(), worktree)?;
         debug!("Oxlint language_server_command LspSettings: {settings:?}");
 
-        let mut args = vec![
-            self.get_resolved_exe_path(worktree)?.to_string_lossy().to_string(),
-            "--lsp".to_string(),
-        ];
-        let mut command = node_binary_path()?;
-        let mut env = EnvVars::default();
         if let Some(binary) = settings.binary {
             if (binary.path.is_some() && binary.arguments.is_none())
                 || (binary.path.is_none() && binary.arguments.is_some())
@@ -41,16 +35,21 @@ impl ZedLspSupport for ZedOxlintLsp {
                 );
             }
 
-            if let Some(arguments) = binary.arguments {
-                args = arguments;
+            let has_env = binary.env.is_some();
+            let env = normalize_env(binary.env, worktree)?;
+            if let (Some(command), Some(args)) = (binary.path, binary.arguments) {
+                return Ok(Command { command, args, env });
             }
-            if let Some(path) = binary.path {
-                command = path;
+
+            let mut command =
+                self.get_default_language_server_command(language_server_id, worktree)?;
+            if has_env {
+                apply_env_overrides(&mut command.env, env);
             }
-            env = normalize_env(binary.env, worktree)?;
+            return Ok(command);
         }
 
-        Ok(Command { command, args, env })
+        self.get_default_language_server_command(language_server_id, worktree)
     }
 
     fn language_server_initialization_options(

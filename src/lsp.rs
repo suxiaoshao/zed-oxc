@@ -3,13 +3,27 @@ use std::env;
 use std::path::{Path, PathBuf};
 use zed_extension_api::serde_json::{Value, from_str};
 use zed_extension_api::{
-    Command, LanguageServerId, LanguageServerInstallationStatus, Result, Worktree,
-    npm_install_package, npm_package_installed_version, npm_package_latest_version,
-    set_language_server_installation_status,
+    Command, EnvVars, LanguageServerId, LanguageServerInstallationStatus, Os, Result, Worktree,
+    current_platform, node_binary_path, npm_install_package, npm_package_installed_version,
+    npm_package_latest_version, set_language_server_installation_status,
 };
 
 pub const OXLINT_SERVER_ID: &str = "oxlint";
 pub const OXFMT_SERVER_ID: &str = "oxfmt";
+
+fn get_path_exe_name(package_name: &str, os: Os) -> String {
+    if os == Os::Windows { format!("{package_name}.exe") } else { package_name.to_string() }
+}
+
+pub(crate) fn apply_env_overrides(env: &mut EnvVars, overrides: EnvVars) {
+    for (name, value) in overrides {
+        if let Some((_, existing_value)) = env.iter_mut().find(|(key, _)| key == &name) {
+            *existing_value = value;
+        } else {
+            env.push((name, value));
+        }
+    }
+}
 
 pub trait ZedLspSupport: Send + Sync {
     fn get_workspace_exe_path(&self, worktree: &Worktree) -> Result<Option<PathBuf>> {
@@ -37,30 +51,50 @@ pub trait ZedLspSupport: Send + Sync {
         Ok(None)
     }
 
-    fn exe_exists(&self, worktree: &Worktree) -> Result<bool> {
-        Ok(self.get_workspace_exe_path(worktree)?.is_some())
-    }
-
     fn get_exe_path_from(&self, from: &Path, package_dir: &str, exe_name: &str) -> Result<PathBuf> {
         // Doesn't use `node_modules/.bin` due to PNPM storing bash scripts there
         // instead of Node.js scripts.
         Ok(from.join("node_modules").join(package_dir).join("bin").join(exe_name))
     }
 
-    fn get_resolved_exe_path(&self, worktree: &Worktree) -> Result<PathBuf> {
+    fn get_default_language_server_command(
+        &self,
+        language_server_id: &LanguageServerId,
+        worktree: &Worktree,
+    ) -> Result<Command> {
         if let Some(path) = self.get_workspace_exe_path(worktree)? {
             debug!("Found exe installation in worktree at path {path:?}");
-            return Ok(path);
+            return Ok(Command {
+                command: node_binary_path()?,
+                args: vec![path.to_string_lossy().to_string(), "--lsp".to_string()],
+                env: Default::default(),
+            });
         }
 
         let package_name = self.get_package_name();
+        let path_exe_name = get_path_exe_name(package_name.as_str(), current_platform().0);
+        if let Some(path) = worktree.which(path_exe_name.as_str()) {
+            debug!("Found exe in worktree PATH at path {path:?}");
+            return Ok(Command {
+                command: path,
+                args: vec!["--lsp".to_string()],
+                env: worktree.shell_env(),
+            });
+        }
+
+        self.update_extension_language_server_if_outdated(language_server_id)?;
+
         let path = self.get_exe_path_from(
             env::current_dir().map_err(|err| err.to_string())?.as_path(),
             package_name.as_str(),
             package_name.as_str(),
-        );
+        )?;
         debug!("Using exe installation from extension at path {path:?}");
-        path
+        Ok(Command {
+            command: node_binary_path()?,
+            args: vec![path.to_string_lossy().to_string(), "--lsp".to_string()],
+            env: Default::default(),
+        })
     }
 
     fn get_package_name(&self) -> String;
