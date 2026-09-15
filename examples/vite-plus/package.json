@@ -1,0 +1,8 @@
+{
+  "name": "oxc-zed-vite-plus-example",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "vite-plus": "^0.3.1"
+  }
+}

@@ -14,5 +14,7 @@
     ```bash
    cargo binstall just -y
     ```
-4. Run `just ready` to verify that the project builds and runs correctly. Run this command before creating a PR to ensure
+4. Install Node.js and make `node` available on `PATH`. The resolver tests use Node
+   to exercise the same filesystem bridge and launcher that the WASM extension uses.
+5. Run `just ready` to verify that the project builds and runs correctly. Run this command before creating a PR to ensure
    that CI will pass.

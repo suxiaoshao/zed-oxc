@@ -6,6 +6,23 @@ repository = "https://github.com/oxc-project/oxc-zed"
 schema_version = 1
 version = "0.4.7"
 
+# Zed selects an absolute Node path at runtime. The resolver reads project
+# manifests and executable metadata through Node because WASI cannot read them.
+[[capabilities]]
+kind = "process:exec"
+command = "*"
+args = ["-e", "*", "--", "ancestors", "*", "*"]
+
+[[capabilities]]
+kind = "process:exec"
+command = "*"
+args = ["-e", "*", "--", "executable", "*", "*"]
+
+[[capabilities]]
+kind = "process:exec"
+command = "*"
+args = ["-e", "*", "--", "global", "*", "vp"]
+
 [language_servers.oxlint]
 code_actions_kind = ["quickfix", "source.fixAll.oxc"]
 language = "JavaScript"
